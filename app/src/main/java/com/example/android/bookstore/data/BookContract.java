@@ -30,7 +30,7 @@ public final class BookContract {
 
         // Name of the book.
         // Type: TEXT
-        public static final String COLUMN_BOOK_NAME = "\"book name\"";
+        public static final String COLUMN_BOOK_NAME = "book_name";
 
         // Price of the book (in cents).
         // Type: INTEGER
@@ -42,10 +42,10 @@ public final class BookContract {
 
         // Name of the book supplier
         // Type: TEXT
-        public static final String COLUMN_BOOK_SUPPLIER_NAME = "\"supplier name\"";
+        public static final String COLUMN_BOOK_SUPPLIER_NAME = "supplier_name";
 
         // Phone number of the book supplier
         // Type: TEXT
-        public static final String COLUMN_BOOK_SUPPLIER_PHONE_NUMBER = "\"supplier phone number\"";
+        public static final String COLUMN_BOOK_SUPPLIER_PHONE_NUMBER = "supplier_phone_number";
     }
 }
