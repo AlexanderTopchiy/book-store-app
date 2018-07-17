@@ -7,6 +7,8 @@ import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
@@ -24,6 +26,13 @@ public class CatalogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
+
+        // Find the ListView which will be populated with the book data
+        ListView bookListView = findViewById(R.id.list_view_book);
+
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        View emptyView = findViewById(R.id.empty_view);
+        bookListView.setEmptyView(emptyView);
 
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
@@ -96,63 +105,5 @@ public class CatalogActivity extends AppCompatActivity {
                 null,                   // don't filter by row groups
                 null               // The sort order
         );
-
-        TextView displayView = findViewById(R.id.text_view_book);
-
-        try {
-            // Create a header in the Text View that looks like this:
-            //
-            // The pets table contains <number of rows in Cursor> books.
-            // _id - author - book name - price - quantity - supplier name - supplier phone number
-            //
-            // In the while loop below, iterate through the rows of the cursor and display
-            // the information from each column in this order.
-            displayView.setText("The books table contains " + cursor.getCount() + " books.\n\n");
-            displayView.append(BookEntry._ID + " - " +
-                    BookEntry.COLUMN_BOOK_AUTHOR + " - " +
-                    BookEntry.COLUMN_BOOK_NAME + " - " +
-                    BookEntry.COLUMN_BOOK_PRICE + " - " +
-                    BookEntry.COLUMN_BOOK_QUANTITY + "-" +
-                    BookEntry.COLUMN_BOOK_SUPPLIER_NAME + " - " +
-                    BookEntry.COLUMN_BOOK_SUPPLIER_PHONE_NUMBER + "\n"
-            );
-
-            // Figure out the index of each column.
-            int idColumnIndex = cursor.getColumnIndex(BookEntry._ID);
-            int authorColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_AUTHOR);
-            int bookNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_NAME);
-            int priceColmumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_PRICE);
-            int quantityColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_QUANTITY);
-            int supplierNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_SUPPLIER_NAME);
-            int suppllierPhoneNumberColumnIndex =
-                    cursor.getColumnIndex(BookEntry.COLUMN_BOOK_SUPPLIER_PHONE_NUMBER);
-
-            // Iterate through all the returned rows in the cursor.
-            while (cursor.moveToNext()) {
-                // Use that index to extract the String or Int value of the word
-                // at the current row the cursor is on.
-                int currentID = cursor.getInt(idColumnIndex);
-                String currentAuthor = cursor.getString(authorColumnIndex);
-                String currentBookName = cursor.getString(bookNameColumnIndex);
-                int currentPrice = cursor.getInt(priceColmumnIndex);
-                int currentQuantity = cursor.getInt(quantityColumnIndex);
-                String currentSupplierName = cursor.getString(supplierNameColumnIndex);
-                String currentSupplierPhoneNumbder =
-                        cursor.getString(suppllierPhoneNumberColumnIndex);
-                // Display the values from each column of the current row in the cursor in the TextView.
-                displayView.append(("\n" +
-                        currentID + " - " +
-                        currentAuthor + " - " +
-                        currentBookName + " - " +
-                        currentPrice + " - " +
-                        currentQuantity + " - " +
-                        currentSupplierName + " - " +
-                        currentSupplierPhoneNumbder));
-            }
-        } finally {
-            // Always close the cursor when you're done reading from it. This releases all its
-            // resources and makes it invalid.
-            cursor.close();
-        }
     }
 }
