@@ -3,4 +3,5 @@
     <string name="empty_view_title_text">There are no books...</string>
     <string name="empty_view_subtitle_text">Get started by adding a book.</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="action_delete_all_entries">Delete all books</string>
 </resources>

@@ -7,9 +7,10 @@ import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
 import com.example.android.bookstore.data.BookDbHelper;
@@ -40,10 +41,32 @@ public class CatalogActivity extends AppCompatActivity {
         insertData();
     }
 
+    /**
+     * Helper method to delete all books in the database.
+     */
+    private void deleteAllBooks() {
+        int rowsDeleted = getContentResolver().delete(BookEntry.CONTENT_URI, null, null);
+        Log.v("CatalogActivity", rowsDeleted + " rows deleted from book database");
+    }
+
     @Override
-    protected void onStart() {
-        super.onStart();
-        queryData();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu options from the res/menu/menu_catalog.xml file.
+        // This adds menu items to the app bar.
+        getMenuInflater().inflate(R.menu.menu_catalog, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // User clicked on a menu option in the app bar overflow menu
+        switch (item.getItemId()) {
+            // Respond to a click on the "Delete all entries" menu option
+            case R.id.action_delete_all_entries:
+                deleteAllBooks();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
