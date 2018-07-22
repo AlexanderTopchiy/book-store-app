@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Book Store</string>
-    <string name="empty_view_title_text">There are no books...</string>
+    <string name="empty_view_title_text">There are no books&#8230;</string>
     <string name="empty_view_subtitle_text">Get started by adding a book.</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="action_insert_dummy_data">Insert dummy data</string>
     <string name="action_delete_all_entries">Delete all books</string>
+    <string name="sale_button">Sale</string>
+    <string name="quantity_word">Quantity: </string>
 </resources>
