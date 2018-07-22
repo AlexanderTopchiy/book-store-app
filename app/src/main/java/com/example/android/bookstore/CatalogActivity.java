@@ -1,6 +1,9 @@
 package com.example.android.bookstore;
 
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
@@ -18,10 +21,13 @@ import com.example.android.bookstore.data.BookDbHelper;
 /**
  * Displays list of books that were entered and stored in the app.
  */
-public class CatalogActivity extends AppCompatActivity {
+public class CatalogActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // Database helper that will provide us access to the database.
     private BookDbHelper mDbHelper;
+
+    BookCursorAdapter mCursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,10 @@ public class CatalogActivity extends AppCompatActivity {
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
         bookListView.setEmptyView(emptyView);
+
+        // Setup the Adapter to create a list.
+        mCursorAdapter = new BookCursorAdapter(this, null);
+        bookListView.setAdapter(mCursorAdapter);
     }
 
     /**
@@ -68,12 +78,44 @@ public class CatalogActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        // Define a projection that specifies the columns from the table we care about.
+        String[] projection = {
+                BaseColumns._ID,
+                BookEntry.COLUMN_BOOK_AUTHOR,
+                BookEntry.COLUMN_BOOK_NAME,
+                BookEntry.COLUMN_BOOK_PRICE,
+                BookEntry.COLUMN_BOOK_QUANTITY
+        };
+
+        // This loader will execute the ContentProvider's query method on a background thread.
+        return new CursorLoader(this,
+                BookEntry.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Update {@link BookCursorAdapter} with this new cursor containing updated book data.
+        mCursorAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // Callback called when the data needs to be deleted.
+        mCursorAdapter.swapCursor(null);
+    }
+
     /**
      * Insert new books into database.
      */
     private void insertData() {
         // Create database helper.
-        BookDbHelper mDbHelper = new BookDbHelper(this);
+        mDbHelper = new BookDbHelper(this);
 
         // Gets the database in write mode.
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -100,7 +142,7 @@ public class CatalogActivity extends AppCompatActivity {
     private void queryData() {
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
-        BookDbHelper mDbHelper = new BookDbHelper(this);
+        mDbHelper = new BookDbHelper(this);
 
         // Create and/or open a database to read from it.
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
