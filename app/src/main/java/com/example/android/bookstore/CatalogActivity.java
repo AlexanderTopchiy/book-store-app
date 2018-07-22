@@ -29,6 +29,8 @@ public class CatalogActivity extends AppCompatActivity
 
     BookCursorAdapter mCursorAdapter;
 
+    private static final int BOOK_LOADER = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,9 @@ public class CatalogActivity extends AppCompatActivity
         // Setup the Adapter to create a list.
         mCursorAdapter = new BookCursorAdapter(this, null);
         bookListView.setAdapter(mCursorAdapter);
+
+        // Kick of the loader
+        getLoaderManager().initLoader(BOOK_LOADER, null, this);
     }
 
     /**
