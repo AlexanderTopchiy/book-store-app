@@ -29,29 +29,14 @@
             android:textColor="#2B3D4D"
             tools:text="Book name" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#AEB6BD"
-                tools:text="$" />
-
-            <TextView
-                android:id="@+id/price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:fontFamily="sans-serif"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#AEB6BD"
-                tools:text="0" />
-        </LinearLayout>
+            android:fontFamily="sans-serif"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="#AEB6BD"
+            tools:text="$0" />
     </LinearLayout>
 
     <TextView

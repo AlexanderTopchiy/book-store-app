@@ -6,6 +6,7 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -119,12 +120,6 @@ public class CatalogActivity extends AppCompatActivity
      * Insert new books into database.
      */
     private void insertData() {
-        // Create database helper.
-        mDbHelper = new BookDbHelper(this);
-
-        // Gets the database in write mode.
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
         // Create a ContentValues object where column names are the keys,
         // and book attributes are the values.
         ContentValues values = new ContentValues();
@@ -135,10 +130,11 @@ public class CatalogActivity extends AppCompatActivity
         values.put(BookEntry.COLUMN_BOOK_SUPPLIER_NAME, "Piter");
         values.put(BookEntry.COLUMN_BOOK_SUPPLIER_PHONE_NUMBER, "81335548833");
 
-        // Insert a new row for book in the database, returning the ID of that new row.
-        long newRowId = db.insert(BookEntry.TABLE_NAME, null, values);
-
-        Log.v("Insertion of book", "New ID of row is " + newRowId);
+        // Insert a new row for Azimov into the provider using the ContentResolver.
+        // Use the {@link BookEntry#CONTENT_URI} to indicate that we want to insert
+        // into the pets database table.
+        // Receive the new content URI that will allow us to access Azimov's data in the future.
+        Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
     }
 
     /**

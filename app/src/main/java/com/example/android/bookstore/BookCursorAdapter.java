@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class BookCursorAdapter extends CursorAdapter{
 
     /**
@@ -61,16 +64,19 @@ public class BookCursorAdapter extends CursorAdapter{
         int priceColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_QUANTITY);
 
-        // Read the pet attributes from the Cursor for the current book
+        // Read the book attributes from the Cursor for the current book
         String author = cursor.getString(authorColumnIndex);
         String bookName = cursor.getString(bookNameColumnIndex);
-        String price = cursor.getString(priceColumnIndex);
         String quantity = cursor.getString(quantityColumnIndex);
+        // Get price in cents and convert to dollars
+        long priceInCents = cursor.getLong(priceColumnIndex);
+        NumberFormat formatOfMoney = NumberFormat.getCurrencyInstance(Locale.US);
+        String priceInDollars = formatOfMoney.format(priceInCents / 100.0);
 
         // Update the TextViews with the attributes for the current book
         authorTextView.setText(author);
         bookNameTextView.setText(bookName);
-        priceTextView.setText(price);
+        priceTextView.setText(priceInDollars);
         quantityTextView.setText(quantity);
     }
 }

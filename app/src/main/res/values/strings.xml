@@ -7,4 +7,5 @@
     <string name="action_delete_all_entries">Delete all books</string>
     <string name="sale_button">Sale</string>
     <string name="quantity_word">Quantity: </string>
+    <string name="dollar_symbol">$</string>
 </resources>
