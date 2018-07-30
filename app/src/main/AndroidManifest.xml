@@ -17,6 +17,16 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".DetailActivity"
+            android:label="@string/book_detail"
+            android:parentActivityName=".CatalogActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CatalogActivity" />
+        </activity>
+
         <provider
             android:name=".data.BookProvider"
             android:authorities="com.example.android.bookstore"

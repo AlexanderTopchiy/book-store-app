@@ -67,7 +67,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:text="@string/sale_button" />
+        android:text="@string/sale_button"
+        android:focusable="false"/>
 
 
 </RelativeLayout>

@@ -1,19 +1,24 @@
 package com.example.android.bookstore;
 
+import android.app.Activity;
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
@@ -25,9 +30,6 @@ import com.example.android.bookstore.data.BookDbHelper;
 public class CatalogActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    // Database helper that will provide us access to the database.
-    private BookDbHelper mDbHelper;
-
     BookCursorAdapter mCursorAdapter;
 
     private static final int BOOK_LOADER = 0;
@@ -36,6 +38,16 @@ public class CatalogActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
+
+        // Setup FAB to open EditorActivity
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CatalogActivity.this, DetailActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Find the ListView which will be populated with the book data
         ListView bookListView = findViewById(R.id.list_view_book);
@@ -47,6 +59,20 @@ public class CatalogActivity extends AppCompatActivity
         // Setup the Adapter to create a list.
         mCursorAdapter = new BookCursorAdapter(this, null);
         bookListView.setAdapter(mCursorAdapter);
+
+        // Setup the item click listener
+        bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(CatalogActivity.this, DetailActivity.class);
+
+                Uri currentBookUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
+
+                intent.setData(currentBookUri);
+
+                startActivity(intent);
+            }
+        });
 
         // Kick of the loader
         getLoaderManager().initLoader(BOOK_LOADER, null, this);
@@ -135,40 +161,5 @@ public class CatalogActivity extends AppCompatActivity
         // into the pets database table.
         // Receive the new content URI that will allow us to access Azimov's data in the future.
         Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
-    }
-
-    /**
-     * Querying book data from a database.
-     */
-    private void queryData() {
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper
-        // and pass the context, which is the current activity.
-        mDbHelper = new BookDbHelper(this);
-
-        // Create and/or open a database to read from it.
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
-        // Define a projection that specifies which columns from the database
-        // you will actually use after this query.
-        String[] projection = {
-                BaseColumns._ID,
-                BookEntry.COLUMN_BOOK_AUTHOR,
-                BookEntry.COLUMN_BOOK_NAME,
-                BookEntry.COLUMN_BOOK_PRICE,
-                BookEntry.COLUMN_BOOK_QUANTITY,
-                BookEntry.COLUMN_BOOK_SUPPLIER_NAME,
-                BookEntry.COLUMN_BOOK_SUPPLIER_PHONE_NUMBER
-        };
-
-        // The Cursor object that contains all rows from the books table.
-        Cursor cursor = db.query(
-                BookEntry.TABLE_NAME,   // The table to query
-                projection,             // The array of columns to return (pass null to get all)
-                null,              // The columns for the WHERE clause
-                null,          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                null               // The sort order
-        );
     }
 }
