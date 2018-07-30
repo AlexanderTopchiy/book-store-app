@@ -20,6 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextClock;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
 import com.example.android.bookstore.data.BookDbHelper;
@@ -161,5 +164,22 @@ public class CatalogActivity extends AppCompatActivity
         // into the pets database table.
         // Receive the new content URI that will allow us to access Azimov's data in the future.
         Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
+    }
+
+    /**
+     * Sale the book.
+     * @param view is view.
+     */
+    public void saleBook(View view) {
+        TextView quantityTextView = findViewById(R.id.quantity);
+        String quantityString = quantityTextView.getText().toString();
+        int quantity = Integer.parseInt(quantityString);
+        quantity--;
+        if (quantity < 0) {
+            quantity = 0;
+        }
+        quantityTextView.setText(Integer.toString(quantity));
+        Toast.makeText(this, getString(R.string.sale_book),
+                Toast.LENGTH_SHORT).show();
     }
 }
