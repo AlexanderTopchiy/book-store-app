@@ -490,4 +490,15 @@ public class DetailActivity extends AppCompatActivity implements
         // Close the activity
         finish();
     }
+
+    /**
+     * Send the intent to call supplier by phone number.
+     * @param view is view.
+     */
+    public void phoneCall(View view) {
+        String phoneNumber = mSupplierPhoneNumberEditText.getText().toString().trim();
+
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null));
+        startActivity(intent);
+    }
 }
