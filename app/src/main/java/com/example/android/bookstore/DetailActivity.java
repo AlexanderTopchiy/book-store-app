@@ -121,7 +121,7 @@ public class DetailActivity extends AppCompatActivity implements
     /**
      * Get user input from editor and save book into database.
      */
-    private void saveBook() {
+    private boolean saveBook() {
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
         String authorString = mAuthorEditText.getText().toString().trim();
@@ -133,13 +133,15 @@ public class DetailActivity extends AppCompatActivity implements
 
         // Check if this is supposed to be a new book
         // and check if all the fields in the editor are blank
-        if (mCurrentBookUri == null &&
-                TextUtils.isEmpty(authorString) && TextUtils.isEmpty(bookNameString) &&
-                TextUtils.isEmpty(priceInDollars) && TextUtils.isEmpty(supplierNameString) &&
+        if (mCurrentBookUri == null ||
+                TextUtils.isEmpty(authorString) || TextUtils.isEmpty(bookNameString) ||
+                TextUtils.isEmpty(priceInDollars) || TextUtils.isEmpty(supplierNameString) ||
                 TextUtils.isEmpty(supplierPhoneNumberString)) {
             // Since no fields were modified, we can return early without creating a new book.
             // No need to create ContentValues and no need to do any ContentProvider operations.
-            return;
+            Toast.makeText(this, getString(R.string.fill_all_fields),
+                    Toast.LENGTH_SHORT).show();
+            return false;
         }
 
         // Create a ContentValues object where column names are the keys,
@@ -198,6 +200,7 @@ public class DetailActivity extends AppCompatActivity implements
                         Toast.LENGTH_SHORT).show();
             }
         }
+        return true;
     }
 
     @Override
@@ -230,9 +233,10 @@ public class DetailActivity extends AppCompatActivity implements
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 // Save book to database
-                saveBook();
-                // Exit activity
-                finish();
+                if (saveBook()) {
+                    // Exit activity
+                    finish();
+                }
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
