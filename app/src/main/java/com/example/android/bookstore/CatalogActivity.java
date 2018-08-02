@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -19,13 +20,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.bookstore.data.BookContract;
 import com.example.android.bookstore.data.BookContract.BookEntry;
 import com.example.android.bookstore.data.BookDbHelper;
+import com.example.android.bookstore.data.BookProvider;
+
+import java.net.URI;
 
 /**
  * Displays list of books that were entered and stored in the app.
@@ -53,7 +59,7 @@ public class CatalogActivity extends AppCompatActivity
         });
 
         // Find the ListView which will be populated with the book data
-        ListView bookListView = findViewById(R.id.list_view_book);
+        final ListView bookListView = findViewById(R.id.list_view_book);
 
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
@@ -69,7 +75,7 @@ public class CatalogActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Intent intent = new Intent(CatalogActivity.this, DetailActivity.class);
 
-                Uri currentBookUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
+                final Uri currentBookUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
 
                 intent.setData(currentBookUri);
 
@@ -179,7 +185,15 @@ public class CatalogActivity extends AppCompatActivity
             quantity = 0;
         }
         quantityTextView.setText(Integer.toString(quantity));
-        Toast.makeText(this, getString(R.string.sale_book),
-                Toast.LENGTH_SHORT).show();
+        ContentValues values = new ContentValues();
+        values.put(BookEntry.COLUMN_BOOK_QUANTITY, quantity);
+        int rowsAffected = getContentResolver().update(BookEntry.CONTENT_URI, values, null, null);
+        if (rowsAffected == 0) {
+            Toast.makeText(this, getString(R.string.sale_book_error),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.sale_book),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }

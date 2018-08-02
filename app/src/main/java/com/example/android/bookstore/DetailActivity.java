@@ -133,7 +133,7 @@ public class DetailActivity extends AppCompatActivity implements
 
         // Check if this is supposed to be a new book
         // and check if all the fields in the editor are blank
-        if (mCurrentBookUri == null ||
+        if (mCurrentBookUri == null &&
                 TextUtils.isEmpty(authorString) || TextUtils.isEmpty(bookNameString) ||
                 TextUtils.isEmpty(priceInDollars) || TextUtils.isEmpty(supplierNameString) ||
                 TextUtils.isEmpty(supplierPhoneNumberString)) {
@@ -164,7 +164,14 @@ public class DetailActivity extends AppCompatActivity implements
         if (!TextUtils.isEmpty(quantityString)) {
             quantity = Integer.parseInt(quantityString);
         }
-        values.put(BookEntry.COLUMN_BOOK_QUANTITY, quantity);
+        // Check is quantity equals or higher than 0
+        if (quantity < 1) {
+            Toast.makeText(this, getString(R.string.check_quantity),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        } else {
+            values.put(BookEntry.COLUMN_BOOK_QUANTITY, quantity);
+        }
 
         // Determine if this is a new or existing book by checking if mCurrentBookUri is null or not
         if (mCurrentBookUri == null) {
@@ -503,6 +510,8 @@ public class DetailActivity extends AppCompatActivity implements
         String phoneNumber = mSupplierPhoneNumberEditText.getText().toString().trim();
 
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null));
-        startActivity(intent);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }

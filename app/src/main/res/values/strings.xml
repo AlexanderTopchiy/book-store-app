@@ -40,4 +40,6 @@
     <string name="sale_book">Sale book!</string>
     <string name="phone_call">Phone call</string>
     <string name="fill_all_fields">Fiil all fields</string>
+    <string name="check_quantity">Quantity must be higher than 0.</string>
+    <string name="sale_book_error">Error with book sale.</string>
 </resources>
